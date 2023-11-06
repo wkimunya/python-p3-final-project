@@ -6,11 +6,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from alembic.config import Config
 from alembic import command
 
-# Define Brand names and Location names
-brand_names = ["Huggies", "Pampers", "Softcare", "Maramani", "Alizeti"]
-location_names = ["Ruaka", "Rosslyn", "Runda", "Gigiri", "Muthaiga", "Muchatha", "Kasphat"]
-
-
 # Define SQLAlchemy models
 Base = declarative_base()
 
@@ -19,6 +14,7 @@ class Location(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
+
 
 class Brand(Base):
     __tablename__ = 'brands'
@@ -41,12 +37,13 @@ Brand.diapers = relationship('Diaper', order_by=Diaper.id, back_populates='brand
 Location.diapers = relationship('Diaper', order_by=Diaper.id, back_populates='location')
 
 # CLI commands and options
+
 @click.group()
 def cli():
     pass
 
 @cli.command()
-@click.option('--location', prompt='Enter location name', help='Name of the location', type=click.Choice(location_names))
+@click.option('--location', prompt='Enter location name', help='Name of the location')
 def add_location(location):
     # Add a new location to the database
     new_location = Location(name=location)
@@ -55,7 +52,7 @@ def add_location(location):
     click.echo(f'Location "{location}" added.')
 
 @cli.command()
-@click.option('--brand', prompt='Enter brand name', help='Name of the brand', type=click.Choice(brand_names))
+@click.option('--brand', prompt='Enter brand name', help='Name of the brand')
 def add_brand(brand):
     # Add a new diaper brand to the database
     new_brand = Brand(name=brand)
@@ -75,7 +72,7 @@ def add_diaper(name, brand_id, location_id):
     click.echo(f'Diaper "{name}" added to Location ID {location_id} and Brand ID {brand_id}.')
 
 @cli.command()
-@click.option('--location', prompt='Enter location name', help='Name of the location', type=click.Choice(location_names))
+@click.option('--location', prompt='Enter location name', help='Name of the location')
 def list_diapers(location):
     # List diapers available in a specific location
     location_obj = session.query(Location).filter_by(name=location).first()
