@@ -82,6 +82,30 @@ def list_diapers(location):
     else:
         click.echo(f'Location "{location}" not found.')
 
+# Database configuration using Alembic
+alembic_cfg = Config("alembic.ini")
+
+@cli.command()
+def upgrade_db():
+    # Apply Alembic migrations to upgrade the database
+    command.upgrade(alembic_cfg, 'head')
+    click.echo('Database migration completed.')
+
+@cli.command()
+def downgrade_db():
+    # Apply Alembic migrations to downgrade the database
+    command.downgrade(alembic_cfg, '-1')
+    click.echo('Database migration rollback completed.')
+
 if __name__ == '__main__':
     cli()
 
+# Configure the database engine (replace 'sqlite:///diaper_management.db' with your database URL)
+db_engine = create_engine('sqlite:///diaper_management.db')
+Base.metadata.create_all(db_engine)
+
+# Create a session to interact with the database
+Session = sessionmaker(bind=db_engine)
+session = Session()
+
+cli()
