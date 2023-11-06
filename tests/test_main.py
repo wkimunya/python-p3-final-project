@@ -1,9 +1,9 @@
 # tests/test_main.py
 # Import necessary modules for testing
 import pytest
-from diaper_management import Location, Brand, Diaper, session
+from lib.diaper_management import Location, Brand, Diaper, session
 from click.testing import CliRunner
-from diaper_management import cli  # Import the Click CLI application
+from lib.diaper_management import cli  # Import the Click CLI application
 
 # Create a Click runner for testing
 runner = CliRunner()
