@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 from alembic.config import Config
 from alembic import command
+import click
 
 # Define SQLAlchemy models
 Base = declarative_base()
@@ -14,6 +15,7 @@ class Location(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
+
 
 class Brand(Base):
     __tablename__ = 'brands'
