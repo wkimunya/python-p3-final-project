@@ -35,4 +35,53 @@ class Diaper(Base):
 Brand.diapers = relationship('Diaper', order_by=Diaper.id, back_populates='brand')
 Location.diapers = relationship('Diaper', order_by=Diaper.id, back_populates='location')
 
-# CLI commands and options (to be defined in a separate section)
+# CLI commands and options
+
+@click.group()
+def cli():
+    pass
+
+@cli.command()
+@click.option('--location', prompt='Enter location name', help='Name of the location')
+def add_location(location):
+    # Add a new location to the database
+    new_location = Location(name=location)
+    session.add(new_location)
+    session.commit()
+    click.echo(f'Location "{location}" added.')
+
+@cli.command()
+@click.option('--brand', prompt='Enter brand name', help='Name of the brand')
+def add_brand(brand):
+    # Add a new diaper brand to the database
+    new_brand = Brand(name=brand)
+    session.add(new_brand)
+    session.commit()
+    click.echo(f'Brand "{brand}" added.')
+
+@cli.command()
+@click.option('--name', prompt='Enter diaper name', help='Name of the diaper')
+@click.option('--brand_id', type=int, prompt='Enter brand ID', help='ID of the brand')
+@click.option('--location_id', type=int, prompt='Enter location ID', help='ID of the location')
+def add_diaper(name, brand_id, location_id):
+    # Add a new diaper to the database
+    new_diaper = Diaper(name=name, brand_id=brand_id, location_id=location_id)
+    session.add(new_diaper)
+    session.commit()
+    click.echo(f'Diaper "{name}" added to Location ID {location_id} and Brand ID {brand_id}.')
+
+@cli.command()
+@click.option('--location', prompt='Enter location name', help='Name of the location')
+def list_diapers(location):
+    # List diapers available in a specific location
+    location_obj = session.query(Location).filter_by(name=location).first()
+    if location_obj:
+        diapers = location_obj.diapers
+        for diaper in diapers:
+            click.echo(f'Diaper Name: {diaper.name}, Brand: {diaper.brand.name}')
+    else:
+        click.echo(f'Location "{location}" not found.')
+
+if __name__ == '__main__':
+    cli()
+
