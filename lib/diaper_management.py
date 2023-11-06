@@ -10,6 +10,7 @@ from alembic import command
 brand_names = ["Huggies", "Pampers", "Softcare", "Maramani", "Alizeti"]
 location_names = ["Ruaka", "Rosslyn", "Runda", "Gigiri", "Muthaiga", "Muchatha", "Kasphat"]
 
+
 # Define SQLAlchemy models
 Base = declarative_base()
 
@@ -110,3 +111,5 @@ Base.metadata.create_all(db_engine)
 # Create a session to interact with the database
 Session = sessionmaker(bind=db_engine)
 session = Session()
+
+cli()
